@@ -4,7 +4,7 @@
 import React from 'react'
 
 function Board() {
-  const [state, setState] = React.useState(Array(9).fill(null));
+  const [state, setState] = React.useState(() =>  JSON.parse(window.localStorage.getItem('squares')) || Array(9).fill(null));
   const nextValue = calculateNextValue(state);
   const winner = calculateWinner(state);
   const status = calculateStatus(winner, state, nextValue);
@@ -16,11 +16,17 @@ function Board() {
     const stateCopy = [...state];
     stateCopy[square] = nextValue;
     setState(stateCopy);
+    updateLocalStorage(stateCopy);
     
+  }
+  
+  const updateLocalStorage = (currentState) => {
+    window.localStorage.setItem('squares', JSON.stringify(currentState))
   }
 
   function restart() {
     setState(Array(9).fill(null));
+    updateLocalStorage(state);
   }
 
   function renderSquare(i) {
